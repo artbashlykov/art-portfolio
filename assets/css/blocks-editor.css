@@ -1,0 +1,100 @@
+/* Vertical spacing between ART Portfolio blocks in the block editor. */
+.block-editor-block-list__block[data-type^="art-portfolio/"] {
+	margin-block: 12px;
+}
+
+.editor-styles-wrapper .wp-block[class*="wp-block-art-portfolio-"] {
+	margin-block: 12px;
+}
+
+.editor-styles-wrapper .art-portfolio-editor-shell,
+.block-editor-block-list__block .art-portfolio-editor-shell,
+.art-portfolio-editor-shell {
+	box-sizing: border-box;
+	padding: 12px;
+	border: 1px dashed #c3c4c7;
+	border-radius: 8px;
+	background-color: #f6f7f7;
+}
+
+.editor-styles-wrapper .art-portfolio-editor-title,
+.block-editor-block-list__block .art-portfolio-editor-title,
+.art-portfolio-editor-title {
+	font-weight: 700;
+	margin: 0 0 4px;
+	color: #1e1e1e;
+}
+
+.editor-styles-wrapper .art-portfolio-editor-hint,
+.block-editor-block-list__block .art-portfolio-editor-hint,
+.art-portfolio-editor-hint {
+	margin: 0 0 10px;
+	opacity: 1;
+	font-size: 12px;
+	line-height: 1.45;
+	color: #646970;
+}
+
+.editor-styles-wrapper .art-portfolio-editor-empty,
+.block-editor-block-list__block .art-portfolio-editor-empty,
+.art-portfolio-editor-empty {
+	margin: 0;
+	font-size: 12px;
+	line-height: 1.45;
+	color: #1e1e1e;
+}
+
+.art-portfolio-editor-color-control__row {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+}
+
+.art-portfolio-editor-color-control__picker-wrap {
+	display: block;
+	flex: 0 0 36px;
+	width: 36px;
+	height: 36px;
+	border: 2px solid #000;
+	border-radius: 50%;
+	overflow: hidden;
+}
+
+.art-portfolio-editor-color-control__picker {
+	display: block;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background: transparent;
+	cursor: pointer;
+	overflow: hidden;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.art-portfolio-editor-color-control__picker::-webkit-color-swatch-wrapper {
+	padding: 0;
+}
+
+.art-portfolio-editor-color-control__picker::-webkit-color-swatch {
+	border: none;
+	border-radius: 50%;
+}
+
+.art-portfolio-editor-color-control__picker::-moz-color-swatch {
+	border: none;
+	border-radius: 50%;
+}
+
+.art-portfolio-editor-color-control__row .components-base-control {
+	flex: 1 1 auto;
+	margin-bottom: 0;
+}
+
+.art-portfolio-editor-color-control__row .components-button {
+	flex-shrink: 0;
+	height: 36px;
+}

@@ -1,0 +1,110 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "art-portfolio/gallery",
+	"title": "АРТ Портфолио: Галерея",
+	"category": "art-portfolio",
+	"icon": "portfolio",
+	"description": "Сетка карточек портфолио с живым превью внутренних страниц.",
+	"keywords": [ "portfolio", "gallery", "preview", "collection" ],
+	"textdomain": "art-portfolio",
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ]
+	},
+	"attributes": {
+		"columns": {
+			"type": "number",
+			"default": 2
+		},
+		"tabletColumns": {
+			"type": "number",
+			"default": 2
+		},
+		"mobileColumns": {
+			"type": "number",
+			"default": 1
+		},
+		"gap": {
+			"type": "number",
+			"default": 24
+		},
+		"perPage": {
+			"type": "number",
+			"default": 10
+		},
+		"collectionId": {
+			"type": "number",
+			"default": 0
+		},
+		"showFilters": {
+			"type": "boolean",
+			"default": true
+		},
+		"showBadge": {
+			"type": "boolean",
+			"default": true
+		},
+		"showDescription": {
+			"type": "boolean",
+			"default": true
+		},
+		"showMeta": {
+			"type": "boolean",
+			"default": true
+		},
+		"showButton": {
+			"type": "boolean",
+			"default": true
+		},
+		"buttonText": {
+			"type": "string",
+			"default": "Посмотреть"
+		},
+		"buttonAlign": {
+			"type": "string",
+			"default": "left"
+		},
+		"layout": {
+			"type": "string",
+			"default": "masonry"
+		},
+		"colorTitle": {
+			"type": "string",
+			"default": ""
+		},
+		"colorBadge": {
+			"type": "string",
+			"default": ""
+		},
+		"colorBadgeBg": {
+			"type": "string",
+			"default": ""
+		},
+		"colorDescription": {
+			"type": "string",
+			"default": ""
+		},
+		"colorMetaLabel": {
+			"type": "string",
+			"default": ""
+		},
+		"colorMetaValue": {
+			"type": "string",
+			"default": ""
+		},
+		"colorButton": {
+			"type": "string",
+			"default": ""
+		},
+		"colorButtonBg": {
+			"type": "string",
+			"default": ""
+		},
+		"colorCardBg": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"editorScript": "file:./index.js"
+}

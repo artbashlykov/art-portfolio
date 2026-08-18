@@ -1,0 +1,160 @@
+.art-portfolio-admin .art-portfolio-metabox__heading {
+	margin: 16px 0 4px;
+	font-weight: 600;
+}
+
+.art-portfolio-metabox__intro {
+	margin: 0 0 10px;
+}
+
+.art-portfolio-metabox__field label {
+	display: block;
+	margin: 0 0 4px;
+	font-weight: 600;
+}
+
+.art-portfolio-metabox__field .description {
+	display: block;
+	margin-top: 4px;
+}
+
+.art-portfolio-metabox__notice {
+	margin: 0 0 12px;
+	padding: 8px 10px;
+	border-left: 4px solid #dba617;
+	background: #fcf9e8;
+}
+
+.art-portfolio-metabox__notice.is-hidden {
+	display: none;
+}
+
+.art-portfolio-metabox__image-preview {
+	margin: 0 0 8px;
+	max-width: 320px;
+}
+
+.art-portfolio-metabox__image-preview.is-empty {
+	display: none;
+}
+
+.art-portfolio-metabox__image-preview img {
+	display: block;
+	width: 100%;
+	height: auto;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+}
+
+.art-portfolio-metabox__image-actions {
+	margin: 0 0 4px;
+}
+
+.art-portfolio-metabox__image-actions .is-hidden {
+	display: none;
+}
+
+.art-portfolio-metabox__row {
+	display: grid;
+	grid-template-columns: 1fr 1fr auto;
+	gap: 8px;
+	margin: 0 0 8px;
+	align-items: center;
+}
+
+.art-portfolio-admin-url {
+	display: inline-block;
+	max-width: 220px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	vertical-align: bottom;
+}
+
+.wp-list-table .column-art_portfolio_badge {
+	width: 140px;
+}
+
+.wp-list-table .column-art_portfolio_url {
+	width: 240px;
+}
+
+@media (max-width: 782px) {
+	.art-portfolio-metabox__row {
+		grid-template-columns: 1fr;
+	}
+}
+
+.art-portfolio-admin > h1 {
+	margin-bottom: 10px;
+}
+
+.art-portfolio-panel {
+	max-width: 960px;
+	margin: 0 0 20px;
+	padding: 16px 20px;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	background: #fff;
+	box-sizing: border-box;
+}
+
+.art-portfolio-admin .art-portfolio-panel > h2 {
+	margin: 0 0 10px;
+	padding: 0 0 10px;
+	border-bottom: 1px solid #dcdcde;
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.art-portfolio-admin .art-portfolio-panel > h3 {
+	margin: 16px 0 10px;
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.art-portfolio-admin .art-portfolio-panel > p {
+	margin: 0 0 12px;
+}
+
+.art-portfolio-help-list {
+	margin: 0 0 0 1.2em;
+	padding: 0;
+}
+
+.art-portfolio-help-list li {
+	margin: 0 0 6px;
+}
+
+.art-portfolio-copy-field {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin: 0 0 12px;
+}
+
+.art-portfolio-copy-field__code {
+	display: inline-block;
+	max-width: 100%;
+	padding: 6px 10px;
+	border-radius: 4px;
+	background: #f0f0f1;
+	color: #1e1e1e;
+	font-size: 13px;
+	line-height: 1.5;
+	word-break: break-all;
+}
+
+.art-portfolio-help-table {
+	margin: 10px 0 0;
+}
+
+.art-portfolio-help-table th,
+.art-portfolio-help-table td {
+	vertical-align: middle;
+}
+
+.art-portfolio-help-table .art-portfolio-copy-field {
+	margin: 0;
+}

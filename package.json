@@ -1,0 +1,11 @@
+{
+	"name": "art-portfolio",
+	"private": true,
+	"scripts": {
+		"build": "wp-scripts build src/gallery/index.js --output-path=build/gallery && node scripts/copy-block-json.js",
+		"start": "wp-scripts start src/gallery/index.js --output-path=build/gallery"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^30.26.0"
+	}
+}
