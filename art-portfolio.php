@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       ART Portfolio
  * Description:       Портфолио в виде сетки карточек с живым превью внутренних страниц сайта через iframe.
- * Version:           1.3.0
+ * Version:           1.3.1
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Арт Башлыков
@@ -16,7 +16,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'ART_PORTFOLIO_VERSION', '1.3.0' );
+define( 'ART_PORTFOLIO_VERSION', '1.3.1' );
 define( 'ART_PORTFOLIO_ADMIN_MENU_SLUG', 'art-portfolio' );
 define( 'ART_PORTFOLIO_AUTHOR_URL', 'https://forge.artbashlykov.ru' );
 define( 'ART_PORTFOLIO_PLUGIN_FILE', __FILE__ );

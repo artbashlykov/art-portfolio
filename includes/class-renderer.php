@@ -321,20 +321,15 @@ class Art_Portfolio_Renderer {
 	}
 
 	/**
-	 * Work URL that opens at the top of the page, without leftover fragments.
+	 * Work URL without a fragment, so the destination does not jump to an anchor.
 	 *
 	 * @param string $url Preview or button URL.
 	 * @return string
 	 */
 	private static function get_work_open_url( $url ) {
 		$parts = explode( '#', (string) $url, 2 );
-		$url   = Art_Portfolio_Meta_Boxes::encode_url_for_request( $parts[0] );
 
-		if ( '' === $url ) {
-			return '';
-		}
-
-		return $url . '#top';
+		return Art_Portfolio_Meta_Boxes::encode_url_for_request( $parts[0] );
 	}
 
 	/**
@@ -745,7 +740,8 @@ class Art_Portfolio_Renderer {
 	 * @return string
 	 */
 	private static function get_gallery_url( $page, $collection_id ) {
-		$url = remove_query_arg( array( self::PAGE_QUERY_VAR, self::COLLECTION_QUERY_VAR ) );
+		$url = self::get_current_url_without_fragment();
+		$url = remove_query_arg( array( self::PAGE_QUERY_VAR, self::COLLECTION_QUERY_VAR ), $url );
 
 		if ( (int) $collection_id > 0 ) {
 			$url = add_query_arg( self::COLLECTION_QUERY_VAR, (int) $collection_id, $url );
@@ -756,6 +752,40 @@ class Art_Portfolio_Renderer {
 		}
 
 		return $url;
+	}
+
+	/**
+	 * Absolute current URL without a hash, so filter/pagination links do not inherit a fragment.
+	 *
+	 * @return string
+	 */
+	private static function get_current_url_without_fragment() {
+		$uri = '/';
+
+		if ( isset( $_SERVER['REQUEST_URI'] ) ) {
+			$uri = sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) );
+		}
+
+		$uri = explode( '#', $uri, 2 )[0];
+
+		if ( '' === $uri ) {
+			$uri = '/';
+		}
+
+		$home = wp_parse_url( home_url( '/' ) );
+		$host = isset( $home['host'] ) ? (string) $home['host'] : '';
+
+		if ( ! empty( $home['port'] ) ) {
+			$host .= ':' . $home['port'];
+		}
+
+		$scheme = isset( $home['scheme'] ) ? (string) $home['scheme'] : 'https';
+
+		if ( '' === $host ) {
+			return home_url( $uri );
+		}
+
+		return esc_url_raw( $scheme . '://' . $host . $uri );
 	}
 
 	/**

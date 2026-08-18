@@ -354,30 +354,29 @@
 		grid.querySelectorAll('.art-portfolio-card').forEach(initCard);
 	}
 
-	function workOpenUrl(href) {
+	function withoutHash(href) {
 		try {
 			var url = new URL(href, window.location.href);
-			url.hash = 'top';
+			url.hash = '';
 			return url.toString();
 		} catch (error) {
-			var base = String(href || '').split('#')[0];
-			return base ? base + '#top' : '';
+			return String(href || '').split('#')[0];
 		}
 	}
 
-	function initWorkLinks(root) {
+	function initPluginLinks(root) {
 		root.addEventListener(
 			'click',
 			function (event) {
 				var link = event.target.closest(
-					'a.art-portfolio-card__button, a.art-portfolio-card__title-link, a.art-portfolio-card__image-link'
+					'a.art-portfolio-filters__chip, a.art-portfolio-pagination__link, a.art-portfolio-card__button, a.art-portfolio-card__title-link, a.art-portfolio-card__image-link'
 				);
 
 				if (!link || !root.contains(link)) {
 					return;
 				}
 
-				var url = workOpenUrl(link.getAttribute('href') || '');
+				var url = withoutHash(link.getAttribute('href') || '');
 
 				if (url) {
 					link.setAttribute('href', url);
@@ -388,7 +387,7 @@
 	}
 
 	function initGallery(root) {
-		initWorkLinks(root);
+		initPluginLinks(root);
 
 		var grid = root.querySelector('.art-portfolio-grid');
 
