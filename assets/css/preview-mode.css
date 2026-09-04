@@ -2,3 +2,14 @@ html {
 	overflow-anchor: none;
 	scroll-behavior: auto !important;
 }
+
+html.art-portfolio-preview-pinned,
+html.art-portfolio-preview-pinned body {
+	overflow: hidden !important;
+	height: 100%;
+	overscroll-behavior: none;
+}
+
+body.art-portfolio-preview-mode {
+	overscroll-behavior: none;
+}

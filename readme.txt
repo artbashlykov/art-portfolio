@@ -4,7 +4,7 @@ Tags: portfolio, gallery, live preview, iframe, gutenberg
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -40,6 +40,10 @@ Same-site pages are the supported scenario. External URLs can be saved, but brow
 No. An iframe is created only after the visitor interacts with that specific card.
 
 == Changelog ==
+
+= 1.3.2 =
+* Kept live preview scroll inside the iframe so it no longer moves the portfolio page.
+* Stopped the 1440×900 preview iframe from stretching the first card and leaving a blank gap.
 
 = 1.3.1 =
 * Removed hash fragments from gallery filters, pagination, and work links so the page no longer jumps to an anchor.

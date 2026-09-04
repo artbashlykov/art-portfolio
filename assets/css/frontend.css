@@ -200,6 +200,7 @@
 	width: auto;
 	max-width: 100%;
 	margin: 0 0 var(--art-portfolio-gap);
+	transform: translateZ(0);
 	break-inside: avoid;
 	page-break-inside: avoid;
 	-webkit-column-break-inside: avoid;
@@ -214,6 +215,7 @@
 	flex-direction: column;
 	min-width: 0;
 	overflow: hidden;
+	isolation: isolate;
 	border: 1px solid #e2e4e7;
 	border-radius: 12px;
 	background: var(--art-portfolio-color-card-bg);
@@ -228,8 +230,12 @@
 
 .art-portfolio-card__preview {
 	position: relative;
-	aspect-ratio: 16 / 10;
+	width: 100%;
+	height: 0;
+	padding-top: 62.5%;
+	flex: 0 0 auto;
 	overflow: hidden;
+	overscroll-behavior: contain;
 	background: #f0f0f1;
 	outline: none;
 }
@@ -248,7 +254,8 @@
 }
 
 .art-portfolio-card__image {
-	position: relative;
+	position: absolute;
+	inset: 0;
 	z-index: 1;
 	transition: opacity 0.25s ease;
 }
@@ -277,6 +284,7 @@
 	inset: 0;
 	z-index: 2;
 	overflow: hidden;
+	overscroll-behavior: contain;
 	opacity: 0;
 }
 
@@ -285,9 +293,14 @@
 }
 
 .art-portfolio-card__iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
 	display: block;
 	width: 1440px;
 	height: 900px;
+	max-width: none;
+	max-height: none;
 	border: 0;
 	transform-origin: 0 0;
 	background: #fff;
@@ -325,10 +338,6 @@
 
 .art-portfolio-card:not(.is-interactive) .art-portfolio-card__live-preview {
 	pointer-events: none;
-}
-
-.art-portfolio-card.is-interactive .art-portfolio-card__preview {
-	overscroll-behavior: contain;
 }
 
 .art-portfolio-card__content {

@@ -57,6 +57,39 @@
 		}
 	}
 
+	var parentScrollHold = {
+		x: 0,
+		y: 0,
+		handler: null,
+		timer: 0
+	};
+
+	function beginParentScrollHold() {
+		if (!parentScrollHold.handler) {
+			parentScrollHold.x = window.scrollX;
+			parentScrollHold.y = window.scrollY;
+			parentScrollHold.handler = function () {
+				if (window.scrollX !== parentScrollHold.x || window.scrollY !== parentScrollHold.y) {
+					window.scrollTo(parentScrollHold.x, parentScrollHold.y);
+				}
+			};
+			window.addEventListener('scroll', parentScrollHold.handler);
+		}
+
+		window.clearTimeout(parentScrollHold.timer);
+		parentScrollHold.timer = window.setTimeout(endParentScrollHold, 1200);
+	}
+
+	function endParentScrollHold() {
+		window.clearTimeout(parentScrollHold.timer);
+		parentScrollHold.timer = 0;
+
+		if (parentScrollHold.handler) {
+			window.removeEventListener('scroll', parentScrollHold.handler);
+			parentScrollHold.handler = null;
+		}
+	}
+
 	function createIframe(preview, url) {
 		var iframe = document.createElement('iframe');
 		var title = preview.getAttribute('aria-label') || '';
@@ -65,6 +98,7 @@
 		iframe.setAttribute('title', title);
 		iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
 		iframe.setAttribute('tabindex', '-1');
+		iframe.setAttribute('scrolling', 'no');
 		iframe.width = String(viewportWidth());
 		iframe.height = String(viewportHeight());
 		iframe.style.transformOrigin = '0 0';
@@ -152,22 +186,34 @@
 			}
 		}
 
-		function resetIframeScroll() {
+		function getIframeDocument() {
 			var win = getIframeWindow();
 
 			if (!win) {
+				return null;
+			}
+
+			try {
+				return win.document || null;
+			} catch (error) {
+				return null;
+			}
+		}
+
+		function resetIframeScroll() {
+			var doc = getIframeDocument();
+
+			if (!doc) {
 				return;
 			}
 
-			win.scrollTo(0, 0);
-
 			try {
-				if (win.document && win.document.documentElement) {
-					win.document.documentElement.scrollTop = 0;
+				if (doc.documentElement) {
+					doc.documentElement.scrollTop = 0;
 				}
 
-				if (win.document && win.document.body) {
-					win.document.body.scrollTop = 0;
+				if (doc.body) {
+					doc.body.scrollTop = 0;
 				}
 			} catch (error) {
 				return;
@@ -176,18 +222,26 @@
 
 		function setIframePinned(pinned) {
 			var win = getIframeWindow();
+			var doc = getIframeDocument();
+			var isPinned = Boolean(pinned);
 
-			if (!win) {
-				return;
+			if (win) {
+				try {
+					win.artPortfolioPreviewPinned = isPinned;
+				} catch (error) {
+					// Same-origin access can fail while the iframe is still loading.
+				}
 			}
 
-			try {
-				win.artPortfolioPreviewPinned = Boolean(pinned);
-			} catch (error) {
-				return;
+			if (doc && doc.documentElement) {
+				doc.documentElement.classList.toggle('art-portfolio-preview-pinned', isPinned);
 			}
 
-			if (pinned) {
+			if (iframe) {
+				iframe.setAttribute('scrolling', isPinned ? 'no' : 'yes');
+			}
+
+			if (isPinned) {
 				resetIframeScroll();
 			}
 		}
@@ -217,6 +271,7 @@
 			show(loader);
 			show(live);
 
+			beginParentScrollHold();
 			iframe = createIframe(preview, url);
 			live.appendChild(iframe);
 			watchResize();
@@ -234,6 +289,7 @@
 				scaleIframe();
 				resetIframeScroll();
 				setIframePinned(!interactive);
+				beginParentScrollHold();
 				logDebug('ART Portfolio: preview loaded', url);
 			});
 

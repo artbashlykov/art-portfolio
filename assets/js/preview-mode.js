@@ -5,16 +5,36 @@
 		history.scrollRestoration = 'manual';
 	}
 
-	if ( 'undefined' === typeof window.artPortfolioPreviewPinned ) {
-		window.artPortfolioPreviewPinned = true;
-	}
+	var pinned =
+		'undefined' === typeof window.artPortfolioPreviewPinned ? true : Boolean(window.artPortfolioPreviewPinned);
 
-	function toTop() {
-		if (false === window.artPortfolioPreviewPinned) {
+	Object.defineProperty(window, 'artPortfolioPreviewPinned', {
+		configurable: true,
+		get: function () {
+			return pinned;
+		},
+		set: function (value) {
+			pinned = Boolean(value);
+			syncPinnedClass();
+
+			if (pinned) {
+				toTop();
+			}
+		}
+	});
+
+	function syncPinnedClass() {
+		if (!document.documentElement) {
 			return;
 		}
 
-		window.scrollTo(0, 0);
+		document.documentElement.classList.toggle('art-portfolio-preview-pinned', pinned);
+	}
+
+	function toTop() {
+		if (!pinned) {
+			return;
+		}
 
 		if (document.documentElement) {
 			document.documentElement.scrollTop = 0;
@@ -25,8 +45,22 @@
 		}
 	}
 
+	if (Element.prototype.scrollIntoView) {
+		var nativeScrollIntoView = Element.prototype.scrollIntoView;
+
+		Element.prototype.scrollIntoView = function () {
+			if (pinned) {
+				return;
+			}
+
+			return nativeScrollIntoView.apply(this, arguments);
+		};
+	}
+
+	syncPinnedClass();
 	toTop();
 	document.addEventListener('DOMContentLoaded', toTop);
+	document.addEventListener('focusin', toTop);
 	window.addEventListener('load', toTop);
 	window.addEventListener(
 		'scroll',
