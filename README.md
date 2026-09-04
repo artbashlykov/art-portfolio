@@ -2,7 +2,7 @@
 
 Плагин WordPress для портфолио в виде сетки карточек с живым превью внутренних страниц сайта через iframe.
 
-**Версия:** 1.3.2  
+**Версия:** 1.3.3  
 **Требования:** WordPress 6.0+, PHP 7.4+
 
 **Официальный репозиторий:** [https://github.com/artbashlykov/art-portfolio](https://github.com/artbashlykov/art-portfolio)

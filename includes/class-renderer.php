@@ -252,7 +252,7 @@ class Art_Portfolio_Renderer {
 				$title
 			);
 
-			$preview_attrs .= ' tabindex="0" role="group"';
+			$preview_attrs .= ' role="group"';
 			$preview_attrs .= ' data-preview-url="' . esc_url( $iframe_url ) . '"';
 			$preview_attrs .= ' aria-label="' . esc_attr( $preview_label ) . '"';
 		}

@@ -57,36 +57,169 @@
 		}
 	}
 
-	var parentScrollHold = {
+	var parentScrollGuard = {
 		x: 0,
 		y: 0,
-		handler: null,
-		timer: 0
+		pointerDown: false,
+		lastUserInput: 0,
+		iframesCreated: 0,
+		installed: false
 	};
 
-	function beginParentScrollHold() {
-		if (!parentScrollHold.handler) {
-			parentScrollHold.x = window.scrollX;
-			parentScrollHold.y = window.scrollY;
-			parentScrollHold.handler = function () {
-				if (window.scrollX !== parentScrollHold.x || window.scrollY !== parentScrollHold.y) {
-					window.scrollTo(parentScrollHold.x, parentScrollHold.y);
-				}
-			};
-			window.addEventListener('scroll', parentScrollHold.handler);
+	function isInteractivePreviewTarget(target) {
+		if (!target || 'function' !== typeof target.closest) {
+			return false;
 		}
 
-		window.clearTimeout(parentScrollHold.timer);
-		parentScrollHold.timer = window.setTimeout(endParentScrollHold, 1200);
+		var preview = target.closest('.art-portfolio-card__preview');
+
+		if (!preview) {
+			return false;
+		}
+
+		var card = preview.closest('.art-portfolio-card');
+
+		return Boolean(card && card.classList.contains('is-interactive'));
 	}
 
-	function endParentScrollHold() {
-		window.clearTimeout(parentScrollHold.timer);
-		parentScrollHold.timer = 0;
+	function isScrollKey(event) {
+		var key = event.key;
 
-		if (parentScrollHold.handler) {
-			window.removeEventListener('scroll', parentScrollHold.handler);
-			parentScrollHold.handler = null;
+		return (
+			key === ' ' ||
+			key === 'PageUp' ||
+			key === 'PageDown' ||
+			key === 'Home' ||
+			key === 'End' ||
+			key === 'ArrowUp' ||
+			key === 'ArrowDown'
+		);
+	}
+
+	function markParentUserScroll() {
+		parentScrollGuard.lastUserInput = Date.now();
+		parentScrollGuard.x = window.scrollX;
+		parentScrollGuard.y = window.scrollY;
+	}
+
+	function isParentUserScroll() {
+		return parentScrollGuard.pointerDown || Date.now() - parentScrollGuard.lastUserInput < 400;
+	}
+
+	function snapshotParentScroll() {
+		parentScrollGuard.x = window.scrollX;
+		parentScrollGuard.y = window.scrollY;
+	}
+
+	function restoreParentScroll() {
+		if (window.scrollX !== parentScrollGuard.x || window.scrollY !== parentScrollGuard.y) {
+			window.scrollTo(parentScrollGuard.x, parentScrollGuard.y);
+		}
+	}
+
+	function installParentScrollGuard() {
+		if (parentScrollGuard.installed) {
+			return;
+		}
+
+		parentScrollGuard.installed = true;
+		snapshotParentScroll();
+
+		window.addEventListener(
+			'wheel',
+			function (event) {
+				if (isInteractivePreviewTarget(event.target)) {
+					return;
+				}
+
+				markParentUserScroll();
+			},
+			{ capture: true, passive: true }
+		);
+
+		window.addEventListener(
+			'touchstart',
+			function (event) {
+				if (isInteractivePreviewTarget(event.target)) {
+					return;
+				}
+
+				markParentUserScroll();
+			},
+			{ capture: true, passive: true }
+		);
+
+		window.addEventListener(
+			'pointerdown',
+			function (event) {
+				if (isInteractivePreviewTarget(event.target)) {
+					return;
+				}
+
+				parentScrollGuard.pointerDown = true;
+				markParentUserScroll();
+			},
+			true
+		);
+
+		window.addEventListener(
+			'pointerup',
+			function () {
+				parentScrollGuard.pointerDown = false;
+				parentScrollGuard.lastUserInput = Date.now();
+			},
+			true
+		);
+
+		window.addEventListener(
+			'pointercancel',
+			function () {
+				parentScrollGuard.pointerDown = false;
+			},
+			true
+		);
+
+		window.addEventListener(
+			'keydown',
+			function (event) {
+				if (isScrollKey(event)) {
+					markParentUserScroll();
+				}
+			},
+			true
+		);
+
+		window.addEventListener(
+			'scroll',
+			function () {
+				if (isParentUserScroll()) {
+					snapshotParentScroll();
+					return;
+				}
+
+				restoreParentScroll();
+			},
+			{ passive: true }
+		);
+
+		window.addEventListener('pageshow', function () {
+			if (!parentScrollGuard.iframesCreated) {
+				snapshotParentScroll();
+			}
+		});
+
+		window.addEventListener('load', function () {
+			if (!parentScrollGuard.iframesCreated) {
+				snapshotParentScroll();
+			}
+		});
+	}
+
+	function rememberParentScroll() {
+		installParentScrollGuard();
+
+		if (!isParentUserScroll()) {
+			snapshotParentScroll();
 		}
 	}
 
@@ -99,6 +232,7 @@
 		iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
 		iframe.setAttribute('tabindex', '-1');
 		iframe.setAttribute('scrolling', 'no');
+		iframe.setAttribute('inert', '');
 		iframe.width = String(viewportWidth());
 		iframe.height = String(viewportHeight());
 		iframe.style.transformOrigin = '0 0';
@@ -239,11 +373,41 @@
 
 			if (iframe) {
 				iframe.setAttribute('scrolling', isPinned ? 'no' : 'yes');
+
+				if (isPinned) {
+					iframe.setAttribute('inert', '');
+				} else {
+					iframe.removeAttribute('inert');
+				}
 			}
 
 			if (isPinned) {
 				resetIframeScroll();
 			}
+		}
+
+		function bindIframeFocusGuard() {
+			var doc = getIframeDocument();
+
+			if (!doc) {
+				return;
+			}
+
+			if (doc.documentElement && doc.documentElement.getAttribute('data-art-portfolio-focus-guard') === '1') {
+				return;
+			}
+
+			if (doc.documentElement) {
+				doc.documentElement.setAttribute('data-art-portfolio-focus-guard', '1');
+			}
+
+			doc.addEventListener(
+				'focusin',
+				function () {
+					restoreParentScroll();
+				},
+				true
+			);
 		}
 
 		function setInteractive(on) {
@@ -271,7 +435,8 @@
 			show(loader);
 			show(live);
 
-			beginParentScrollHold();
+			parentScrollGuard.iframesCreated += 1;
+			rememberParentScroll();
 			iframe = createIframe(preview, url);
 			live.appendChild(iframe);
 			watchResize();
@@ -289,7 +454,8 @@
 				scaleIframe();
 				resetIframeScroll();
 				setIframePinned(!interactive);
-				beginParentScrollHold();
+				restoreParentScroll();
+				bindIframeFocusGuard();
 				logDebug('ART Portfolio: preview loaded', url);
 			});
 
@@ -383,8 +549,8 @@
 			{ passive: false }
 		);
 
-		preview.addEventListener('focusin', function () {
-			if (isHoverNone()) {
+		preview.addEventListener('focusin', function (event) {
+			if (event.target !== preview || isHoverNone()) {
 				return;
 			}
 
